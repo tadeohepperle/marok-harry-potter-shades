@@ -20,15 +20,14 @@ async function main() {
     // //tokenizeText("This is Harry. And sth")
     // sampleFromProbabilities({ "hello": 0.3, "this": 0.2, "is": 0.01 })
     let words = ["I", "scowl"];
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 1000; i++) {
         let last = words[words.length - 1]
         let vorLast = words[words.length - 2]
         let probabilites = model2[`${vorLast}|${last}`]
-        console.log(probabilites);
         let nextWord = sampleFromProbabilities(probabilites);
         words.push(nextWord);
     }
-    console.log(words.join(" "));
+    console.log(words.join(" ").replaceAll(" . ", ". "));
 }
 
 main();

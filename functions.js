@@ -78,6 +78,8 @@ export function tokenizeText(text) {
         .replaceAll(")", "")
         .replaceAll('"', "")
         .replaceAll("'", "")
+        .replaceAll("”", "")
+
         .split(/\s+/)
         .filter(e => e);
 }
