@@ -1,0 +1,22 @@
+{
+  "name": "2022-07-01-markov-chain-harry-potter",
+  "version": "1.0.0",
+  "description": "Markov Chains Harry Potter and Fifty Shades of Grey",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tadeohepperle/marok-harry-potter-shades.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tadeohepperle/marok-harry-potter-shades/issues"
+  },
+  "homepage": "https://github.com/tadeohepperle/marok-harry-potter-shades#readme",
+  "dependencies": {
+    "esm": "^3.2.25"
+  }
+}
