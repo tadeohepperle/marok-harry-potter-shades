@@ -27,15 +27,58 @@ export function buildMarkovModelsUpToOrder(tokens, order = 2, sep = "|") {
     return Array(order + 1).fill(0).map((_, i) => buildMarkovModel(tokens, i, sep));
 }
 
-export function buildMarkovModel(tokens, order = 1, sep = "|") {
-    if (order == 0) {
-        let model = {}
-        for (let t of tokens) {
-            if (model[t]) {
-                model[t]++;
+export function textToMarkovModels(text, order = 2) {
+    let tokens = tokenizeText(text)
+    return buildMarkovModelsUpToOrder(tokens, order)
+}
+
+export function generateTextFromMarkovModels(models, length = 100) {
+    let order = models.length - 1;
+    let words = [];
+    for (let i = 0; i < length; i++) {
+        let modelOrder = Math.min(i, order)
+        let key = words.slice(words.length - modelOrder, words.length).join("|")
+        let probabilites = models[modelOrder][key]
+        let nextWord = sampleFromProbabilities(probabilites);
+        words.push(nextWord);
+    }
+    let text = "";
+    let spaceBeforeSpeechMarks = true;
+    for (let w of words) {
+        if ([",", ".", "!", "?"].find(e => e == w)) {
+            text += `${w} `
+
+        }
+        else if (w == '"') {
+            text += spaceBeforeSpeechMarks ? ` ${w}` : `${w} `;
+            spaceBeforeSpeechMarks = !spaceBeforeSpeechMarks;
+        }
+        else {
+            if (text[text.length - 1] == '"') {
+                text += w
             }
             else {
-                model[t] = 1;
+                text += ` ${w}`
+            }
+
+        }
+
+    }
+    console.log(words)
+    return text;
+
+
+}
+
+export function buildMarkovModel(tokens, order = 1, sep = "|") {
+    if (order == 0) {
+        let model = { "": {} }
+        for (let t of tokens) {
+            if (model[""][t]) {
+                model[""][t]++;
+            }
+            else {
+                model[""][t] = 1;
             }
         }
         return model;
@@ -69,16 +112,21 @@ export function buildMarkovModel(tokens, order = 1, sep = "|") {
 
 export function tokenizeText(text) {
     //Split by White Space
-    return text.replaceAll(".", " . ")
+    return text
+        .replaceAll(/-\s/g, "")
+        .replaceAll(".", " . ")
         .replaceAll("?", " ? ")
         .replaceAll('!', ' ! ')
         .replaceAll("(", "")
         .replaceAll("[", "")
         .replaceAll("]", "")
         .replaceAll(")", "")
-        .replaceAll('"', "")
+
         .replaceAll("'", "")
-        .replaceAll("”", "")
+        .replaceAll("”", `"`)
+        .replaceAll("“", `"`)
+        .replaceAll('"', ` `)
+
 
         .split(/\s+/)
         .filter(e => e);
